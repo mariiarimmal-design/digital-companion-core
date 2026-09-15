@@ -426,11 +426,13 @@ export class Soul {
     let responseTemplate = "I understand what you're saying.";
     
     if (input.includes('?')) {
-      if (personality.curiosityLevel > 70) {
-        responseTemplate = "That's a fascinating question. Let me think about it...";
-      } else {
-        responseTemplate = "I'll consider that question.";
-      }
+  const questionFocus = input.replace(/\?/g, '').trim();
+  if (personality.curiosityLevel > 70) {
+    responseTemplate = `That's a fascinating question about "${questionFocus}". Let me think about it...`;
+  } else {
+    responseTemplate = `I'll consider what you're asking about "${questionFocus}".`;
+  }
+}
     } else if (mood === 'joyful') {
       responseTemplate = "That sounds wonderful!";
     } else if (mood === 'contemplative') {
@@ -440,12 +442,9 @@ export class Soul {
     }
     
     // Incorporate relevant memories
-    if (memories.length > 0) {
-      const memoryContext = memories[0];
-      if (memoryContext.content.includes(context.participantName)) {
-        responseTemplate += " This reminds me of our previous conversations.";
-      }
-    }
+    if (memories.length > 1) {
+  responseTemplate += " This reminds me of our previous conversations.";
+}
     
     // Adjust for personality traits
     const bigFive = this.personalitySystem.getBigFive();
